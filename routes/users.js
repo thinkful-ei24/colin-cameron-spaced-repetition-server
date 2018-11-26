@@ -85,7 +85,7 @@ router.post('/', (req, res, next) => {
       if (err.code === 11000) {
         err = new Error('The username already exists');
         err.status = 400;
-        err.location: 'username';
+        err.location = 'username';
       }
       next(err);
     });
