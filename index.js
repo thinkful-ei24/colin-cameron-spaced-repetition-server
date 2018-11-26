@@ -37,7 +37,7 @@ passport.use(jwtStrategy);
 app.use(express.json());
 
 // mounted routers
-app.use('/api/login', authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 
 
