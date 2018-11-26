@@ -23,3 +23,5 @@ userSchema.set('toObject', {
     delete result.pasword;
   }
 });
+
+module.exports = mongoose.model('User', userSchema);
