@@ -13,6 +13,7 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
 const authRouter = require('./routes/auth.js');
+const usersRouter = require('./routes/users.js');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use(express.json());
 
 // mounted routers
 app.use('/api/login', authRouter);
+app.use('/api/users', usersRouter);
 
 
 
