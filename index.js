@@ -22,6 +22,18 @@ app.use(
   })
 );
 
+//Custom error handler
+app.use((err, req, res, next) => {
+  if(err.status) {
+    const errBody = Object.assign({}, err, { message: err.message });
+    res.status(err.status).json(errBody);
+  } else {
+    console.log(err);
+    res.status(500).json({ message: 'internal server error' });
+  }
+});
+
+
 function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
