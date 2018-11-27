@@ -42,8 +42,8 @@ router.put('/', (req, res, next) => {
       return User.findOneAndUpdate({ _id: userId }, result, {new: true});
     })
     .then(result => {
-      const {guesses, correct} = result.questions[index];
-      res.json({ feedback, guesses, correct});
+      const {guesses, correct, answer} = result.questions[index];
+      res.json({ feedback, guesses, correct, answer});
     })
     .catch(err => next(err));
 })
