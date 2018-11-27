@@ -9,13 +9,13 @@ const router = express.Router();
 
 router.post('/', (req, res, next) => {
 
-  const {username, password} = req.body;
+  const { username, password } = req.body;
   //*** validation checks ***
   //checks to make sure user has a username and password
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
-  if(missingField) {
+  if (missingField) {
     return res.status(422).json({
       code: 422,
       reason: 'Validation Error',
@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
   }
 
   //username must be a minimum of 1 character long
-  if(username.length < 1) {
+  if (username.length < 1) {
     return res.status(422).json({
       code: 422,
       reason: 'Validation Error',
@@ -81,7 +81,11 @@ router.post('/', (req, res, next) => {
       return User.create(newUser);
     })
     .then(user => {
-      return res.status(201).json(user);
+      let returnObj = {
+        username: user.username,
+        id: user._id
+      };
+      return res.status(201).json(returnObj);
     })
     .catch(err => {
       console.log(err);
