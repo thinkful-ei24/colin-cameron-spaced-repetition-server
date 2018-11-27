@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     question: String,
     answer: String,
     memoryStrength: Number,
+    guesses: Number,
+    correct: Number,
     next: Number
   }],
   head: {

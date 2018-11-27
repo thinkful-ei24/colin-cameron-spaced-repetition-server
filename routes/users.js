@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
-const User = require('../models/users.js');
 const express = require('express');
+const User = require('../models/users.js');
+const Pair = require('../models/pairs');
+const initialQuestions = require('./initialQuestion');
 const router = express.Router();
 
 /* ================ POST creates a new user ==================== */
@@ -8,7 +10,6 @@ const router = express.Router();
 router.post('/', (req, res, next) => {
 
   const {username, password} = req.body;
-
   //*** validation checks ***
   //checks to make sure user has a username and password
   const requiredFields = ['username', 'password'];
@@ -68,12 +69,14 @@ router.post('/', (req, res, next) => {
       location: 'password'
     });
   }
-
-  User.hashPassword(password)
-    .then(digest => {
+  Promise.all([User.hashPassword(password), Pair.find()])
+    .then(([digest, arr]) => {
+      console.log(digest, arr);
+      const questions = initialQuestions(arr);
       const newUser = {
         username,
         password: digest,
+        questions
       };
       return User.create(newUser);
     })

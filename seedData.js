@@ -33,5 +33,8 @@ const pairs = [
     answer: 'CHICKEN'
   }
 ];
+for(let i=0; i< pairs.length; i++){
+  Pair.create(pairs[i]);
+}
 
-Pair.insertMany(pairs);
+module.exports = pairs;

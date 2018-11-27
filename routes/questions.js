@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const User = require('../models/users');
 const passport = require('passport');
 const router = express.Router();
 
@@ -7,17 +8,13 @@ router.use('/', passport.authenticate('jwt', { session: false, failWithError: tr
 
 router.get('/', (req, res, next) => {
   const userId = req.user.id;
-
-  let data = {
-    spanish: 'agua',
-    english: 'water',
-    score: 1,
-    guesses: 0,
-    correct: 0,
-    next: '',
-  };
-
-  res.json(data);
+  User.findOne({_id: userId})
+    .then(result => {
+      let questionObj = result.questions[result.head];
+      const {question, guesses, correct} = questionObj;
+      res.json({question, guesses, correct});
+    })
+    .catch(err => next(err));
 });
 
 module.exports = router;
