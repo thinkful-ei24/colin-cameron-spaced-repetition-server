@@ -21,10 +21,12 @@ router.put('/', (req, res, next) => {
   const { question, answer } = req.body;
   const userId = req.user.id;
   let feedback;
+  let index;
   User.findOne({ _id: userId })
     .then(result => {
       let currentQuestion = result.questions[result.head];
-      if (currentQuestion.answer.toUpperCase() === answer.toUpperCase) {
+      index = result.head;
+      if (currentQuestion.answer.toUpperCase() === answer.toUpperCase()) {
         feedback = 'correct';
         currentQuestion.guesses++;
         currentQuestion.correct++;
@@ -34,15 +36,14 @@ router.put('/', (req, res, next) => {
         currentQuestion.guesses++;
         currentQuestion.memoryStrength = 1;
       }
-      return {questions: result, head:currentQuestion.next};
+      return {questions: result.questions, head:currentQuestion.next};
     })
     .then(result => {
-      console.log(result);
-      return User.updateOne({ _id: userId }, result, {new: true});
+      return User.findOneAndUpdate({ _id: userId }, result, {new: true});
     })
     .then(result => {
-      const {guesses, correct} = result;
-      res.json({guesses, correct, feedback});
+      const {guesses, correct} = result.questions[index];
+      res.json({ feedback, guesses, correct});
     })
     .catch(err => next(err));
 })
