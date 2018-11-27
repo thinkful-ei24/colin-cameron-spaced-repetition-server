@@ -14,6 +14,7 @@ const { dbConnect } = require('./db-mongoose');
 
 const authRouter = require('./routes/auth.js');
 const usersRouter = require('./routes/users.js');
+const questionsRouter = require('./routes/questions');
 
 const app = express();
 
@@ -39,7 +40,7 @@ app.use(express.json());
 // mounted routers
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
-
+app.use('/api/questions', questionsRouter);
 
 
 //Custom error handler
