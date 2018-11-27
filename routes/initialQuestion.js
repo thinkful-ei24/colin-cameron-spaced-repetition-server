@@ -7,6 +7,8 @@ const initialQuestions = (arr) => {
     question.question = pair.question;
     question.answer = pair.answer;
     question.memoryStrength = 1;
+    question.guesses = 0;
+    question.correct = 0;
     question.next = (i+1)%10;
     questions.push(question);
   }
