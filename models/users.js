@@ -51,11 +51,13 @@ userSchema.methods.spacedRepetition = function (answer) {
   }
   currentQuestion.next = this.questions[index].next; // questionA.next = 3
   this.questions[index].next = ptr; //questionC.next = 0
+  console.log(this);
   return {
     answer: currentQuestion.answer,
     feedback,
     guesses: currentQuestion.guesses,
-    correct: currentQuestion.correct
+    correct: currentQuestion.correct,
+    user: this
   };
 };
 

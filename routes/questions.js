@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
     .then(result => {
       let questionObj = result.questions[result.head];
       const { question, guesses, correct } = questionObj;
+      console.log(question);
       res.json({ question, guesses, correct });
     })
     .catch(err => next(err));
@@ -20,9 +21,18 @@ router.get('/', (req, res, next) => {
 router.put('/', (req, res, next) => {
   const { answer } = req.body;
   const userId = req.user.id;
+  let index;
+  let feedback;
   User.findOne({ _id: userId })
     .then(result => {
-      return res.json(result.spacedRepetition(answer));
+      index = result.head;
+      let {user, feedback} = result.spacedRepetition(answer);
+      return User.findOneAndUpdate({_id: userId}, user, {new: true});
+    })
+    .then(result => {
+      let currentQuestion = result.questions[index];
+      const {guesses, correct, answer} = currentQuestion;
+      res.json({guesses, correct, answer, feedback});
     })
     .catch(err => next(err));
 });
