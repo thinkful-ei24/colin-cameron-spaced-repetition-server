@@ -23,7 +23,8 @@ const localStrategy = new LocalStrategy((username, password, done) => {
           location: 'password'
         });
       }
-      return done(null, user);
+      let editedUser = {username: user.username, id: user._id};
+      return done(null, editedUser);
     })
     .catch(err => {
       if(err.reason === 'login error') {
