@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
+/* ================ GET current question ==================== */
+
 router.get('/', (req, res, next) => {
   const userId = req.user.id;
   User.findOne({ _id: userId })
@@ -17,6 +19,28 @@ router.get('/', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+/* ================ GET overall progress ==================== */
+
+router.get('/progress', (req, res, next) => {
+  const userId = req.user.id;
+  User.findOne({ _id: userId })
+    .then(result => {
+      const { questions } = result;
+      let response = [];
+      for(let i=0; i<questions.length; i++){
+        let obj={};
+        obj.question = questions[i].question;
+        obj.correct = questions[i].correct;
+        obj.guesses = questions[i].guesses;
+        response.push(obj);
+      }
+      res.json(response);
+    })
+    .catch(err => next(err));
+});
+
+/* ================ PUT answer ==================== */
 
 router.put('/', (req, res, next) => {
   const { answer } = req.body;
