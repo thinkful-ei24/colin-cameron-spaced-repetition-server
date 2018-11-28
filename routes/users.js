@@ -71,7 +71,6 @@ router.post('/', (req, res, next) => {
   }
   Promise.all([User.hashPassword(password), Pair.find()])
     .then(([digest, arr]) => {
-      console.log(digest, arr);
       const questions = initialQuestions(arr);
       const newUser = {
         username,

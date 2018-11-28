@@ -27,6 +27,38 @@ userSchema.statics.hashPassword = password => {
   return bcrypt.hash(password, 11);
 };
 
+userSchema.methods.spacedRepetition = function (answer) {
+  let index = this.head;
+  let feedback;
+  let currentQuestion = this.questions[index];
+
+  if (currentQuestion.answer.toUpperCase() === answer.toUpperCase()) {
+    feedback = 'correct';
+    currentQuestion.guesses++;
+    currentQuestion.correct++;
+    currentQuestion.memoryStrength = Math.min(9, currentQuestion.memoryStrength * 2);
+  }else{
+    feedback = 'incorrect';
+    currentQuestion.guesses++;
+    currentQuestion.memoryStrength = 1;
+  }
+  let ptr = index;
+  this.head = currentQuestion.next;
+  for (let i=0; i < currentQuestion.memoryStrength; i++) {
+    index = this.questions[index].next;
+    //index = 2
+    //ptr = 0
+  }
+  currentQuestion.next = this.questions[index].next; // questionA.next = 3
+  this.questions[index].next = ptr; //questionC.next = 0
+  return {
+    answer: currentQuestion.answer,
+    feedback,
+    guesses: currentQuestion.guesses,
+    correct: currentQuestion.correct
+  };
+};
+
 userSchema.set('toObject', {
   virtuals: true,
   versionKey: false,
