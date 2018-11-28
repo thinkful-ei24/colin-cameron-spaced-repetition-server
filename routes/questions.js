@@ -22,17 +22,18 @@ router.put('/', (req, res, next) => {
   const { answer } = req.body;
   const userId = req.user.id;
   let index;
-  let feedback;
+  let feedbackResponse;
   User.findOne({ _id: userId })
     .then(result => {
       index = result.head;
       let {user, feedback} = result.spacedRepetition(answer);
+      feedbackResponse = feedback;
       return User.findOneAndUpdate({_id: userId}, user, {new: true});
     })
     .then(result => {
       let currentQuestion = result.questions[index];
       const {guesses, correct, answer} = currentQuestion;
-      res.json({guesses, correct, answer, feedback});
+      res.json({guesses, correct, answer, feedback: feedbackResponse});
     })
     .catch(err => next(err));
 });
