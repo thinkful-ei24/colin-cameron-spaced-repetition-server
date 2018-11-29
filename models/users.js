@@ -36,7 +36,7 @@ userSchema.methods.spacedRepetition = function (answer) {
     feedback = 'correct';
     currentQuestion.guesses++;
     currentQuestion.correct++;
-    currentQuestion.memoryStrength = Math.min(9, currentQuestion.memoryStrength * 2);
+    currentQuestion.memoryStrength = Math.min(this.questions.length -1, currentQuestion.memoryStrength * 2);
   }else{
     feedback = 'incorrect';
     currentQuestion.guesses++;
