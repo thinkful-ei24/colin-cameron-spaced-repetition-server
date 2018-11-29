@@ -62,4 +62,43 @@ router.put('/', (req, res, next) => {
     .catch(err => next(err));
 });
 
+
+/* ================= POST new card ================ */
+router.post('/', (req, res, next) => {
+  const {answer, question} = req.body;
+
+  if (!answer || !question) {
+    const err = new Error('wtf you didnt even send anything');
+    err.status = 401;
+    return next(err);
+  }
+  const {id} = req.user;
+  const newCard = {
+    question,
+    answer,
+    memoryStrength: 1,
+    guesses: 0,
+    correct: 0
+  };
+  let oldHead; //oldHead is equal to the head when we find the user thanks to line 74
+  User.findOne({_id: id}) //finds the correct user
+    .then(user => {
+      oldHead = user.head;
+      newCard.next = oldHead;
+      user.head = user.questions.length; //sets current head to the new card
+      user.questions.forEach(question => {
+        if(question.next === oldHead) {
+          question.next = user.head;
+        }
+      });
+      user.questions.push(newCard); // adds the new question and answer pair to user questions array
+      return User.findOneAndUpdate({_id: id}, user, {new: true});
+    })
+    .then(result => {
+      res.json({result}).status(201);
+    })
+    .catch(err => next(err));
+});
+
 module.exports = router;
+
