@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../models/users');
 const passport = require('passport');
 const router = express.Router();
+const uniqid = require('uniqid');
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
@@ -33,6 +34,7 @@ router.get('/progress', (req, res, next) => {
         obj.question = questions[i].question;
         obj.correct = questions[i].correct;
         obj.guesses = questions[i].guesses;
+        obj._id = questions[i]._id;
         response.push(obj);
       }
       res.json(response);
@@ -74,6 +76,7 @@ router.post('/', (req, res, next) => {
   }
   const {id} = req.user;
   const newCard = {
+    _id: uniqid(),
     question,
     answer,
     memoryStrength: 1,
@@ -92,12 +95,42 @@ router.post('/', (req, res, next) => {
         }
       });
       user.questions.push(newCard); // adds the new question and answer pair to user questions array
+      console.log(newCard);
       return User.findOneAndUpdate({_id: id}, user, {new: true});
     })
     .then(result => {
       res.json({result}).status(201);
     })
     .catch(err => next(err));
+});
+
+
+/* ===================== DELETE question =========================== */
+
+
+
+router.delete('/', (req, res, next) => {
+  const questionId = req.body._id;
+
+  const {id} = req.user;
+
+  let deletedItem;
+
+  User.findOne({_id: id})
+    .then(user => {
+      console.log(user.questions);
+      console.log(questionId)
+      deletedItem = user.questions.filter(item => {
+        console.log(item._id);
+        item._id === questionId
+      });
+      console.log(deletedItem)
+      res.json('end');
+    })
+    .catch(err => {
+      console.log(err);
+      next(err)
+    });
 });
 
 module.exports = router;
