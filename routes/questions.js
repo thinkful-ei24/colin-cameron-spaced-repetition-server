@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 const User = require('../models/users');
 const passport = require('passport');
 const router = express.Router();
@@ -15,7 +15,6 @@ router.get('/', (req, res, next) => {
     .then(result => {
       let questionObj = result.questions[result.head];
       const { question, guesses, correct } = questionObj;
-      console.log(question);
       res.json({ question, guesses, correct });
     })
     .catch(err => next(err));
@@ -95,7 +94,6 @@ router.post('/', (req, res, next) => {
         }
       });
       user.questions.push(newCard); // adds the new question and answer pair to user questions array
-      console.log(newCard);
       return User.findOneAndUpdate({_id: id}, user, {new: true});
     })
     .then(result => {
@@ -107,7 +105,7 @@ router.post('/', (req, res, next) => {
 
 /* ===================== DELETE question =========================== */
 
-
+/*
 
 router.delete('/', (req, res, next) => {
   const questionId = req.body._id;
@@ -142,4 +140,4 @@ router.delete('/', (req, res, next) => {
 });
 
 module.exports = router;
-
+*/
