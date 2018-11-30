@@ -114,18 +114,26 @@ router.delete('/', (req, res, next) => {
 
   const {id} = req.user;
 
-  let deletedItem;
+  let deletedItem, deletedItemIndex;
 
   User.findOne({_id: id})
     .then(user => {
       console.log(user.questions);
-      console.log(questionId)
-      deletedItem = user.questions.filter(item => {
-        console.log(item._id);
-        item._id === questionId
+      deletedItem = user.questions.find(item => {
+        return item._id.toString() === questionId;
       });
-      console.log(deletedItem)
-      res.json('end');
+      deletedItemIndex = user.questions.indexOf(deletedItem);
+      user.questions.forEach(item => {
+        if (item.next === deletedItemIndex) {
+          item.next = deletedItem.next;
+        }
+      })
+      user.questions.splice(deletedItemIndex, 1);
+      console.log(user.questions);
+      //      return User.findOneAndUpdate({_id: userId}, user, {new: true});
+      //    })
+      //    .then(result => {
+      //      res.sendStatus(204);
     })
     .catch(err => {
       console.log(err);
