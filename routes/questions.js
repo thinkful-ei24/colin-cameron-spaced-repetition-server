@@ -28,8 +28,8 @@ router.get('/progress', (req, res, next) => {
     .then(result => {
       const { questions } = result;
       let response = [];
-      for(let i=0; i<questions.length; i++){
-        let obj={};
+      for (let i = 0; i < questions.length; i++) {
+        let obj = {};
         obj.question = questions[i].question;
         obj.correct = questions[i].correct;
         obj.guesses = questions[i].guesses;
@@ -51,14 +51,14 @@ router.put('/', (req, res, next) => {
   User.findOne({ _id: userId })
     .then(result => {
       index = result.head;
-      let {user, feedback} = result.spacedRepetition(answer);
+      let { user, feedback } = result.spacedRepetition(answer);
       feedbackResponse = feedback;
-      return User.findOneAndUpdate({_id: userId}, user, {new: true});
+      return User.findOneAndUpdate({ _id: userId }, user, { new: true });
     })
     .then(result => {
       let currentQuestion = result.questions[index];
-      const {guesses, correct, answer} = currentQuestion;
-      res.json({guesses, correct, answer, feedback: feedbackResponse});
+      const { guesses, correct, answer } = currentQuestion;
+      res.json({ guesses, correct, answer, feedback: feedbackResponse });
     })
     .catch(err => next(err));
 });
@@ -66,14 +66,14 @@ router.put('/', (req, res, next) => {
 
 /* ================= POST new card ================ */
 router.post('/', (req, res, next) => {
-  const {answer, question} = req.body;
+  const { answer, question } = req.body;
 
   if (!answer || !question) {
     const err = new Error('wtf you didnt even send anything');
     err.status = 401;
     return next(err);
   }
-  const {id} = req.user;
+  const { id } = req.user;
   const newCard = {
     _id: uniqid(),
     question,
@@ -83,13 +83,13 @@ router.post('/', (req, res, next) => {
     correct: 0
   };
   let oldHead; //oldHead is equal to the head when we find the user thanks to line 74
-  User.findOne({_id: id}) //finds the correct user
+  User.findOne({ _id: id }) //finds the correct user
     .then(user => {
       oldHead = user.head;
       newCard.next = oldHead;
       user.head = user.questions.length; //sets current head to the new card
       user.questions.forEach(question => {
-        if(question.next === oldHead) {
+        if (question.next === oldHead) {
           question.next = user.head;
         }
       });
@@ -97,7 +97,7 @@ router.post('/', (req, res, next) => {
       return User.findOneAndUpdate({_id: id}, user, {new: true});
     })
     .then(result => {
-      res.json({result}).status(201);
+      res.json({ result }).status(201);
     })
     .catch(err => next(err));
 });
@@ -110,11 +110,11 @@ router.post('/', (req, res, next) => {
 router.delete('/', (req, res, next) => {
   const questionId = req.body._id;
 
-  const {id} = req.user;
+  const { id } = req.user;
 
   let deletedItem, deletedItemIndex;
 
-  User.findOne({_id: id})
+  User.findOne({ _id: id })
     .then(user => {
       console.log(user.questions);
       deletedItem = user.questions.find(item => {
@@ -127,11 +127,10 @@ router.delete('/', (req, res, next) => {
         }
       })
       user.questions.splice(deletedItemIndex, 1);
-      console.log(user.questions);
-      //      return User.findOneAndUpdate({_id: userId}, user, {new: true});
-      //    })
-      //    .then(result => {
-      //      res.sendStatus(204);
+      return User.findOneAndUpdate({ _id: id}, user, { new: true });
+    })
+    .then(result => {
+      res.sendStatus(204);
     })
     .catch(err => {
       console.log(err);
