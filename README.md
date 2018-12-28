@@ -1,3 +1,4 @@
+
 # Echar Agua Al Mar Server
 
 This is a repo for the server-side of the Echar Agua Al Mar App, where users can learn Spanish through spaced repetition.
@@ -203,3 +204,4 @@ Authorization: Bearer ${token}
 * **Cameron Hatch** - *Full-Stack* - [CameronHatch92](https://github.com/CameronHatch92)
 
 * **Colin Rupp** - *Full-Stack* - [rupp-colin](https://github.com/rupp-colin)
+

@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 const User = require('../models/users');
 const passport = require('passport');
 const router = express.Router();
@@ -105,38 +105,38 @@ router.post('/', (req, res, next) => {
 
 /* ===================== DELETE question =========================== */
 
+/*
+router.delete('/', (req, res, next) => {
+  const questionId = req.body._id;
 
+  const { id } = req.user;
 
-// router.delete('/', (req, res, next) => {
-//   const questionId = req.body._id;
+  let deletedItem, deletedItemIndex;
 
-//   const { id } = req.user;
-
-//   let deletedItem, deletedItemIndex;
-
-//   User.findOne({ _id: id })
-//     .then(user => {
-//       console.log(user.questions);
-//       deletedItem = user.questions.find(item => {
-//         return item._id.toString() === questionId;
-//       });
-//       deletedItemIndex = user.questions.indexOf(deletedItem);
-//       user.questions.forEach(item => {
-//         if (item.next === deletedItemIndex) {
-//           item.next = deletedItem.next;
-//         }
-//       })
-//       user.questions.splice(deletedItemIndex, 1);
-//       return User.findOneAndUpdate({ _id: id}, user, { new: true });
-//     })
-//     .then(result => {
-//       res.sendStatus(204);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       next(err)
-//     });
-// });
+  User.findOne({ _id: id })
+    .then(user => {
+      console.log(user.questions);
+      deletedItem = user.questions.find(item => {
+        return item._id.toString() === questionId;
+      });
+      deletedItemIndex = user.questions.indexOf(deletedItem);
+      user.questions.forEach(item => {
+        if (item.next === deletedItemIndex) {
+          item.next = deletedItem.next;
+        }
+      })
+      user.questions.splice(deletedItemIndex, 1);
+      return User.findOneAndUpdate({ _id: id}, user, { new: true });
+    })
+    .then(result => {
+      res.sendStatus(204);
+    })
+    .catch(err => {
+      console.log(err);
+      next(err)
+    });
+});
+*/
 
 module.exports = router;
 
