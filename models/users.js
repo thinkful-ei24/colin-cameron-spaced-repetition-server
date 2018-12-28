@@ -46,8 +46,6 @@ userSchema.methods.spacedRepetition = function (answer) {
   this.head = currentQuestion.next;
   for (let i=0; i < currentQuestion.memoryStrength; i++) {
     index = this.questions[index].next;
-    //index = 2
-    //ptr = 0
   }
   currentQuestion.next = this.questions[index].next; // questionA.next = 3
   this.questions[index].next = ptr; //questionC.next = 0

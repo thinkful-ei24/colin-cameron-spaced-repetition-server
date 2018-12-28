@@ -15,7 +15,6 @@ router.get('/', (req, res, next) => {
     .then(result => {
       let questionObj = result.questions[result.head];
       const { question, guesses, correct } = questionObj;
-      console.log(question);
       res.json({ question, guesses, correct });
     })
     .catch(err => next(err));
@@ -95,7 +94,6 @@ router.post('/', (req, res, next) => {
         }
       });
       user.questions.push(newCard); // adds the new question and answer pair to user questions array
-      console.log(newCard);
       return User.findOneAndUpdate({ _id: id }, user, { new: true });
     })
     .then(result => {
@@ -109,36 +107,36 @@ router.post('/', (req, res, next) => {
 
 
 
-router.delete('/', (req, res, next) => {
-  const questionId = req.body._id;
+// router.delete('/', (req, res, next) => {
+//   const questionId = req.body._id;
 
-  const { id } = req.user;
+//   const { id } = req.user;
 
-  let deletedItem, deletedItemIndex;
+//   let deletedItem, deletedItemIndex;
 
-  User.findOne({ _id: id })
-    .then(user => {
-      console.log(user.questions);
-      deletedItem = user.questions.find(item => {
-        return item._id.toString() === questionId;
-      });
-      deletedItemIndex = user.questions.indexOf(deletedItem);
-      user.questions.forEach(item => {
-        if (item.next === deletedItemIndex) {
-          item.next = deletedItem.next;
-        }
-      })
-      user.questions.splice(deletedItemIndex, 1);
-      return User.findOneAndUpdate({ _id: id}, user, { new: true });
-    })
-    .then(result => {
-      res.sendStatus(204);
-    })
-    .catch(err => {
-      console.log(err);
-      next(err)
-    });
-});
+//   User.findOne({ _id: id })
+//     .then(user => {
+//       console.log(user.questions);
+//       deletedItem = user.questions.find(item => {
+//         return item._id.toString() === questionId;
+//       });
+//       deletedItemIndex = user.questions.indexOf(deletedItem);
+//       user.questions.forEach(item => {
+//         if (item.next === deletedItemIndex) {
+//           item.next = deletedItem.next;
+//         }
+//       })
+//       user.questions.splice(deletedItemIndex, 1);
+//       return User.findOneAndUpdate({ _id: id}, user, { new: true });
+//     })
+//     .then(result => {
+//       res.sendStatus(204);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       next(err)
+//     });
+// });
 
 module.exports = router;
 
